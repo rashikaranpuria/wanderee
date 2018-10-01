@@ -9,52 +9,23 @@ import com.google.gson.annotations.SerializedName
 data class VariationsItem(
 
 	@field:SerializedName("default")
-	val jsonMemberDefault: Int,
+	val jsonMemberDefault: Int = 0,
 
 	@field:SerializedName("isVeg")
-	val isVeg: Int,
+	val isVeg: Int = 1,
 
 	@field:SerializedName("price")
-	val price: Int,
+	val price: Int = 0,
 
 	@field:SerializedName("name")
 	val name: String,
 
 	@field:SerializedName("inStock")
-	val inStock: Int,
+	val inStock: Int = 0,
 
 	@field:SerializedName("id")
-	val id: String
-) : Parcelable {
-	constructor(parcel: Parcel) : this(
-			parcel.readInt(),
-			parcel.readInt(),
-			parcel.readInt(),
-			parcel.readString(),
-			parcel.readInt(),
-			parcel.readString()) {
-	}
+	val id: String,
 
-	override fun writeToParcel(parcel: Parcel, flags: Int) {
-		parcel.writeInt(jsonMemberDefault)
-		parcel.writeInt(isVeg)
-		parcel.writeInt(price)
-		parcel.writeString(name)
-		parcel.writeInt(inStock)
-		parcel.writeString(id)
-	}
-
-	override fun describeContents(): Int {
-		return 0
-	}
-
-	companion object CREATOR : Parcelable.Creator<VariationsItem> {
-		override fun createFromParcel(parcel: Parcel): VariationsItem {
-			return VariationsItem(parcel)
-		}
-
-		override fun newArray(size: Int): Array<VariationsItem?> {
-			return arrayOfNulls(size)
-		}
-	}
-}
+//	var isSelected: Boolean = jsonMemberDefault == 1,
+	var isConflictingSelection: Boolean = false
+)
