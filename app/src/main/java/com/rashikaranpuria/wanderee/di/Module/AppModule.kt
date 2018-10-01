@@ -2,9 +2,9 @@ package com.rashikaranpuria.wanderee.di.Module
 
 import android.app.Application
 import com.rashikaranpuria.wanderee.data.api.ApiManager
-import com.rashikaranpuria.wanderee.data.api.DataManager
+import com.rashikaranpuria.wanderee.data.DataManager
 import com.rashikaranpuria.wanderee.data.api.IApiManager
-import com.rashikaranpuria.wanderee.data.api.IDataManager
+import com.rashikaranpuria.wanderee.data.IDataManager
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

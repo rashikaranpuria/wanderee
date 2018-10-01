@@ -63,6 +63,9 @@ dependencies {
 
     // Ktlint
     ktlint "com.github.shyiko:ktlint:0.28.0"
+
+    // Expandable Recycler View
+    implementation 'com.thoughtbot:expandablecheckrecyclerview:1.4'
 }
 
 task ktlint(type: JavaExec, group: "verification") {

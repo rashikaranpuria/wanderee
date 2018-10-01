@@ -1,7 +1,7 @@
 package com.rashikaranpuria.wanderee.di.Module
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import com.rashikaranpuria.wanderee.data.api.WandereeApi
+import com.rashikaranpuria.wanderee.data.api.SwiggyApi
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -15,12 +15,12 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideRetrofit() = Retrofit.Builder()
-            .baseUrl("https://s3-ap-northeast-1.amazonaws.com/m-et/Android/json/")
+            .baseUrl("https://api.myjson.com/bins/")
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
 
     @Provides
     @Singleton
-    fun providesWandereeApi(retrofit: Retrofit) = retrofit.create(WandereeApi::class.java)
+    fun providesSwiggyApi(retrofit: Retrofit) = retrofit.create(SwiggyApi::class.java)
 }

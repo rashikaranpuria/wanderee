@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Wanderee</string>
+    <string name="chooser_title">Customize your order</string>
 </resources>

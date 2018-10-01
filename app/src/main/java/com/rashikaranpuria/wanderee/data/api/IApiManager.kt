@@ -1,12 +1,11 @@
 package com.rashikaranpuria.wanderee.data.api
 
+import com.rashikaranpuria.wanderee.data.api.model.VariantResponse
 import io.reactivex.Single
 
 interface IApiManager {
 
-    // implement method to fetch master data from api
-//    fun fetchMasterData(): Single<List<MasterResponse>>
+    // implement method to fetch variants response data from api
+    fun fetchVariantsData(): Single<VariantResponse>
 
-    // implement method to fetch product category data from api using data url
-//    fun fetchCategoryFromUrl(url: String): Single<List<ProductDataResponse>>
 }
