@@ -8,4 +8,28 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="section_title" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/text_title</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/textDark</item>
+    </style>
+
+    <style name="default_text" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/text_default</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/textMedium</item>
+    </style>
+
+    <style name="default_text_dark_small" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/textBlack</item>
+    </style>
+
+    <style name="low_lighted_text" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/text_default</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/textLight</item>
+    </style>
+
 </resources>
