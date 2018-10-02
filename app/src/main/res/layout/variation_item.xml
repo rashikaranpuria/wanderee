@@ -42,12 +42,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:focusable="false"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:focusable="false"
         android:text="@string/dummy_price"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/checkbox"
         app:layout_constraintStart_toEndOf="@+id/variant_title"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -62,6 +60,20 @@
         android:clickable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/status_label"
+        style="@style/default_info_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/conflicting_choice"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/price"
+        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent" />
 
 

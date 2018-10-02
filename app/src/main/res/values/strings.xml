@@ -3,4 +3,6 @@
     <string name="chooser_title">Customize your order</string>
     <string name="dummy_price">₹ %100</string>
     <string name="price_string">₹ %d</string>
+    <string name="out_of_stock">Out of stock</string>
+    <string name="conflicting_choice">Unavailable with this option</string>
 </resources>

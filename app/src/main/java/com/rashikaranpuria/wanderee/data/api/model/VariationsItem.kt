@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName
 data class VariationsItem(
 
 	@field:SerializedName("default")
-	val jsonMemberDefault: Int = 0,
+	var jsonMemberDefault: Int = 1,
 
 	@field:SerializedName("isVeg")
 	val isVeg: Int = 1,
@@ -26,6 +26,8 @@ data class VariationsItem(
 	@field:SerializedName("id")
 	val id: String,
 
-//	var isSelected: Boolean = jsonMemberDefault == 1,
+	// variable to store selection of variant
+	var isSelected: Boolean = jsonMemberDefault == 1,
+	// variable to store if variant s conflicting another selection
 	var isConflictingSelection: Boolean = false
 )

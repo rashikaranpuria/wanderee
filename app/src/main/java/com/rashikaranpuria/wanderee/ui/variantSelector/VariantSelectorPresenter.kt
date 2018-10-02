@@ -11,6 +11,7 @@ import javax.inject.Inject
 
 class VariantSelectorPresenter<V: IVariantSelectorView> @Inject constructor(private val mDataManager: DataManager, private val mCompositeDisposable: CompositeDisposable): IVariantSelectorPresenter<V>, BasePresenter<V>() {
 
+    // fetch all data from swiggy api
     override fun onAttach(v: V) {
         super.onAttach(v)
         mCompositeDisposable.add(
@@ -19,6 +20,7 @@ class VariantSelectorPresenter<V: IVariantSelectorView> @Inject constructor(priv
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeBy (
                             onSuccess = {
+                                // send variants list and eclusion mapping to adapter via view
                                 view?.setVariantsDataInAdapter(it.variants?.variantGroups, calcExclusionMapping(it.variants?.excludeList))
                             },
                             onError = {
