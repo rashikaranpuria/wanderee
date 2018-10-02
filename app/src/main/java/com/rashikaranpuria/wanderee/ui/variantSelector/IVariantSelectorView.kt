@@ -5,5 +5,5 @@ import com.rashikaranpuria.wanderee.data.api.model.VariantGroupsItem
 import com.rashikaranpuria.wanderee.ui.base.IBaseView
 
 interface IVariantSelectorView: IBaseView {
-    abstract fun setVariantsDataInAdapter(variantGroups: List<VariantGroupsItem?>?, excludeList: List<List<ExcludeListItem?>?>?)
+    abstract fun setVariantsDataInAdapter(variantGroups: List<VariantGroupsItem?>?, excludeMap: HashMap<ExcludeListItem, MutableList<ExcludeListItem>>)
 }

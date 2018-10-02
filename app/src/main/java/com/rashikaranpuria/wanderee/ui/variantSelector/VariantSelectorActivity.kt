@@ -26,29 +26,16 @@ class VariantSelectorActivity: BaseActivity(), IVariantSelectorView {
         list_view.setAdapter(mVariantsAdapter)
         list_view.setOnChildClickListener{ parent, v, groupPosition, childPosition, id ->
 
-            Log.d("ALERTC", "SEE THIS")
+
             false
-//            override fun onChildClick(parent: ExpandableListView, v: View,
-//                    int groupPosition, int childPosition, long id): Boolean {
-//                Toast.makeText(
-//                        getApplicationContext(),
-//                        expandableListTitle.get(groupPosition)
-//                                + " -> "
-//                                + expandableListDetail.get(
-//                                expandableListTitle.get(groupPosition)).get(
-//                                childPosition), Toast.LENGTH_SHORT
-//                ).show();
-//                return false;
-//            }
-//        });
     }
         mVariantSelectorPresenter.onAttach(this)
 
     }
 
-    override fun setVariantsDataInAdapter(variantGroups: List<VariantGroupsItem?>?, excludeList: List<List<ExcludeListItem?>?>?) {
+    override fun setVariantsDataInAdapter(variantGroups: List<VariantGroupsItem?>?, excludeMap: HashMap<ExcludeListItem, MutableList<ExcludeListItem>>) {
         Log.d("variants data: ", variantGroups.toString())
-        Log.d("exclude list data: ", excludeList.toString())
+        Log.d("exclude list data: ", excludeMap.toString())
         mVariantsAdapter.variantGroups = variantGroups as List<VariantGroupsItem>
         mVariantsAdapter.notifyDataSetChanged()
     }

@@ -1,6 +1,7 @@
 package com.rashikaranpuria.wanderee.ui.variantSelector
 
 import com.rashikaranpuria.wanderee.data.DataManager
+import com.rashikaranpuria.wanderee.data.api.model.ExcludeListItem
 import com.rashikaranpuria.wanderee.ui.base.BasePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -18,13 +19,31 @@ class VariantSelectorPresenter<V: IVariantSelectorView> @Inject constructor(priv
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeBy (
                             onSuccess = {
-                                view?.setVariantsDataInAdapter(it.variants?.variantGroups, it.variants?.excludeList)
+                                view?.setVariantsDataInAdapter(it.variants?.variantGroups, calcExclusionMapping(it.variants?.excludeList))
                             },
                             onError = {
                                 view?.error(it.localizedMessage?:"Unable to fetch data from server")
                             }
                         )
         )
+    }
+
+    // create a mapping of data such that for every (group id, child id)
+    // we know which (group id, child id)s to ignore
+    // structure: (group id, child id) -> [(group id1, child id1),(group id2, child id2),(group id3, child id3),...]
+    fun calcExclusionMapping(exclusionList: List<List<ExcludeListItem>>?): HashMap<ExcludeListItem, MutableList<ExcludeListItem>> {
+        val hm = HashMap<ExcludeListItem, MutableList<ExcludeListItem>>()
+        if (exclusionList != null) {
+            for (exclusionRuleList in exclusionList) {
+                for (item in exclusionRuleList) {
+                    if (!hm.containsKey(item))
+                        hm[item] = mutableListOf()
+                    hm[item]!!.addAll(exclusionRuleList.filter { it != item })
+                }
+            }
+
+        }
+        return hm
     }
 
     override fun onDetach() {
