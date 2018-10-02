@@ -15,5 +15,4 @@ class VariantSelectorModule {
 
     @Provides
     fun providePresenter(variantSelectorPresenter: VariantSelectorPresenter<IVariantSelectorView>): IVariantSelectorPresenter<IVariantSelectorView> = variantSelectorPresenter
-
 }

@@ -4,6 +4,7 @@ import android.app.Application
 import com.rashikaranpuria.wanderee.di.Component.AppComponent
 import com.rashikaranpuria.wanderee.di.Component.DaggerAppComponent
 import com.rashikaranpuria.wanderee.di.Module.AppModule
+import timber.log.Timber
 
 open class WandereeApplication : Application() {
     lateinit var appComponent: AppComponent
@@ -14,5 +15,6 @@ open class WandereeApplication : Application() {
         appComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(this))
                 .build()
+        Timber.plant(Timber.DebugTree())
     }
 }

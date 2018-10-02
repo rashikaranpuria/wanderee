@@ -7,5 +7,4 @@ interface IApiManager {
 
     // implement method to fetch variants response data from api
     fun fetchVariantsData(): Single<VariantResponse>
-
 }

@@ -9,7 +9,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class VariantSelectorPresenter<V: IVariantSelectorView> @Inject constructor(private val mDataManager: DataManager, private val mCompositeDisposable: CompositeDisposable): IVariantSelectorPresenter<V>, BasePresenter<V>() {
+class VariantSelectorPresenter<V : IVariantSelectorView> @Inject constructor(private val mDataManager: DataManager, private val mCompositeDisposable: CompositeDisposable) : IVariantSelectorPresenter<V>, BasePresenter<V>() {
 
     // fetch all data from swiggy api
     override fun onAttach(v: V) {
@@ -18,13 +18,13 @@ class VariantSelectorPresenter<V: IVariantSelectorView> @Inject constructor(priv
                 mDataManager.fetchVariantsData()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeBy (
+                        .subscribeBy(
                             onSuccess = {
                                 // send variants list and eclusion mapping to adapter via view
                                 view?.setVariantsDataInAdapter(it.variants?.variantGroups, calcExclusionMapping(it.variants?.excludeList))
                             },
                             onError = {
-                                view?.error(it.localizedMessage?:"Unable to fetch data from server")
+                                view?.error(it.localizedMessage ?: "Unable to fetch data from server")
                             }
                         )
         )
@@ -43,7 +43,6 @@ class VariantSelectorPresenter<V: IVariantSelectorView> @Inject constructor(priv
                     hm[item]!!.addAll(exclusionRuleList.filter { it != item })
                 }
             }
-
         }
         return hm
     }

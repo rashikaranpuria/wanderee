@@ -2,32 +2,38 @@ package com.rashikaranpuria.wanderee.ui.variantSelector
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import com.rashikaranpuria.wanderee.R
 import com.rashikaranpuria.wanderee.WandereeApplication
 import com.rashikaranpuria.wanderee.data.api.model.ExcludeListItem
 import com.rashikaranpuria.wanderee.data.api.model.VariantGroupsItem
+import com.rashikaranpuria.wanderee.data.api.model.VariationsItem
 import com.rashikaranpuria.wanderee.di.Module.VariantSelectorModule
 import com.rashikaranpuria.wanderee.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.variant_selector_activity.*
 import javax.inject.Inject
 
-class VariantSelectorActivity: BaseActivity(), IVariantSelectorView {
+class VariantSelectorActivity : BaseActivity(), IVariantSelectorView {
 
     @Inject
     lateinit var mVariantSelectorPresenter: IVariantSelectorPresenter<IVariantSelectorView>
 
-    lateinit var mVariantsAdapter: VariantsAdapter
+    lateinit var mVariantsAdapter: VariantsGroupAdapter
+
+    // variant list
     var mVariantsList: List<VariantGroupsItem>? = null
+
+    // exclusion mapping
     lateinit var mExclusionMapping: HashMap<ExcludeListItem, MutableList<ExcludeListItem>>
-    val selectionSet = HashMap<Int, Int>()
+
+    // selected options set
+    val selectionSet = HashMap<String, String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.variant_selector_activity)
         (application as WandereeApplication).appComponent.variantSelectorComponent(VariantSelectorModule()).inject(this)
         recycler_view.layoutManager = LinearLayoutManager(this)
-        mVariantsAdapter = VariantsAdapter(this)
+        mVariantsAdapter = VariantsGroupAdapter(this)
         recycler_view.setAdapter(mVariantsAdapter)
         mVariantSelectorPresenter.onAttach(this)
     }
@@ -40,69 +46,84 @@ class VariantSelectorActivity: BaseActivity(), IVariantSelectorView {
 
     override fun resetAdapterData() {
         if (mVariantsList != null) {
-            mVariantsAdapter.variantGroups = mVariantsList as List<VariantGroupsItem>
-            mVariantsAdapter.notifyDataSetChanged()
+//
+//            Timber.d("adapter list" + mVariantsAdapter.variantGroups.toString())
+//            Timber.d("activitylist" + mVariantsList.toString())
+            mVariantsAdapter.variantGroups = deepClone(mVariantsList!!)
         }
     }
 
-    override fun updateListData(groupPosition: Int, childPosition: Int) {
+    override fun updateListData(mGroupId: String, mChildId: String) {
         // if mVariantList is not empty or null
-        if (mVariantsList != null || mVariantsList!!.size <= 0) {
-            var lastSelection = -1
-            // update local selection set
-            if (!selectionSet.containsKey(groupPosition))
-                selectionSet.put(groupPosition, childPosition)
+        if (mVariantsList != null || !mVariantsList!!.isEmpty()) {
+
+            // get selected group and child
+            val selectedGroup = mVariantsList?.find { it.groupId == mGroupId }
+            val selectedChild = selectedGroup?.variations?.find { it.id == mChildId }
+
+            // if selected child is conflicted or not in stock or null return
+            if (selectedGroup == null || selectedChild == null || selectedChild.isConflictingSelection || selectedChild.inStock == 0) {
+                return
+            }
+
+            // update local selection set with new selection
+            if (!selectionSet.containsKey(mGroupId))
+                selectionSet.put(mGroupId, mChildId)
             else {
-                lastSelection = selectionSet[groupPosition]!!
-                selectionSet[groupPosition] = childPosition
+                selectionSet[mGroupId] = mChildId
             }
 
             // remove previous selections in this group and choose current selection
-            mVariantsList!![groupPosition].variations.forEachIndexed { index, variationsItem ->
-                variationsItem.isSelected = index == childPosition
-            }
+
+            selectedGroup
+                    .variations
+                    .forEach {
+                        variationsItem ->
+                        variationsItem.isSelected = variationsItem.id == mChildId
+                    }
 
             // removing all conflicting selections
             mVariantsList!!.forEach { it.variations.forEach { it2 -> it2.isConflictingSelection = false } }
-                for ((groupK, variantV) in selectionSet) {
-                // get selection item
-                val selectedGroup = mVariantsList!![groupK]
-                val selectedItem = ExcludeListItem(selectedGroup.groupId, selectedGroup.variations[variantV].id)
 
-                if (mExclusionMapping.containsKey(selectedItem) && mExclusionMapping[selectedItem]!!.size > 0) {
-                }
-                }
-        }
+            // for each selected option find and mark conflicts
+            for ((groupK, variantV) in selectionSet) {
+                // get selection object item
+                val selectedObj = mVariantsList!!.find { it.groupId == groupK }
+                val selectedObjItem = ExcludeListItem(selectedObj!!.groupId, selectedObj.variations.find { it.id == variantV }!!.id)
 
-        // compute conflicts resulting from change in selection
+                // if map has exclusion for selection object
+                if (mExclusionMapping.containsKey(selectedObjItem) && mExclusionMapping[selectedObjItem]!!.size > 0) {
+                    for (conflictingItem in mExclusionMapping[selectedObjItem]!!) {
+                        mVariantsList!!
+                                .find { it.groupId == conflictingItem.groupId }
+                                ?.variations
+                                ?.forEach {
+                                    // if item is conflict remove selection and set conflict variable
+                                    if (it.id == conflictingItem.variationId) {
+                                        it.isConflictingSelection = true
+                                        it.isSelected = false
+                                    } else {
+                                        // if item is not conflict unset conflict variable
+                                        it.isConflictingSelection = false
+                                    }
+                                }
+                        }
+                    }
+                }
+            }
+        resetAdapterData()
     }
 
-    /*
-    *
-    // get selected item
-    val selectedGroup = mVariantsList!![groupPosition]
-    val selectedItem = ExcludeListItem(selectedGroup.groupId, selectedGroup.variations[childPosition].id)
-
-    // set conflicting items isConflictingSelection variable
-    if (mExclusionMapping.containsKey(selectedItem) && mExclusionMapping[selectedItem]!!.size > 0) {
-        for (conflictingItem in mExclusionMapping[selectedItem]!!) {
-            mVariantsList!!
-                .find { it.groupId == conflictingItem.groupId }
-                ?.variations
-                ?.forEach {
-                    // if item is conflict remove selection and set conflict variable
-                    if (it.id == conflictingItem.variationId) {
-                        it.isConflictingSelection = true
-                        it.isSelected = false
-                    }
-                    else {
-                        // if item is not conflict unset conflict variable
-                        it.isConflictingSelection = false
-                    }
-                }
+    fun deepClone(list: List<VariantGroupsItem>): List<VariantGroupsItem> {
+        val out = mutableListOf<VariantGroupsItem>()
+        list.forEach {
+            val outVariations = mutableListOf<VariationsItem>()
+            it.variations.forEach { it2 ->
+                outVariations.add(VariationsItem(it2.jsonMemberDefault, it2.isVeg, it2.price, it2.name, it2.inStock, it2.id, it2.isSelected, it2.isConflictingSelection)) }
+            out.add(VariantGroupsItem(it.groupId, outVariations, it.name))
         }
-
-                    */
+        return out
+    }
 
     override fun onDestroy() {
         super.onDestroy()

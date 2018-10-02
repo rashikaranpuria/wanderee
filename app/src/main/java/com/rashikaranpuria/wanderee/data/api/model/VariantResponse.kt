@@ -6,6 +6,6 @@ import com.google.gson.annotations.SerializedName
 @Generated("com.robohorse.robopojogenerator")
 data class VariantResponse(
 
-	@field:SerializedName("variants")
-	val variants: Variants? = null
+    @field:SerializedName("variants")
+    val variants: Variants? = null
 )

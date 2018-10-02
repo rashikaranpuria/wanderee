@@ -6,9 +6,9 @@ import com.google.gson.annotations.SerializedName
 @Generated("com.robohorse.robopojogenerator")
 data class Variants(
 
-	@field:SerializedName("variant_groups")
-	val variantGroups: List<VariantGroupsItem>? = null,
+    @field:SerializedName("variant_groups")
+    val variantGroups: List<VariantGroupsItem>? = null,
 
-	@field:SerializedName("exclude_list")
-	val excludeList: List<List<ExcludeListItem>>? = null
+    @field:SerializedName("exclude_list")
+    val excludeList: List<List<ExcludeListItem>>? = null
 )

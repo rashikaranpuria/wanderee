@@ -68,6 +68,8 @@ dependencies {
     // Ktlint
     ktlint "com.github.shyiko:ktlint:0.28.0"
 
+    // Timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 }
 
 task ktlint(type: JavaExec, group: "verification") {
