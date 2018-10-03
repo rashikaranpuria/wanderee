@@ -13,9 +13,6 @@ interface AutoUpdatableAdapter {
             }
 
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-//                Timber.d("Old: ${oldList[oldItemPosition] }")
-//                Timber.d("New: ${newList[newItemPosition] }")
-//                Timber.d("areContent same?  ${oldList[oldItemPosition] == newList[newItemPosition]}")
                 return oldList[oldItemPosition] == newList[newItemPosition]
             }
 

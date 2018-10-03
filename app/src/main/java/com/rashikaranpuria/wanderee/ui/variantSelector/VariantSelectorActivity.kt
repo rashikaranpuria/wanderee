@@ -1,5 +1,6 @@
 package com.rashikaranpuria.wanderee.ui.variantSelector
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import com.rashikaranpuria.wanderee.R
@@ -18,8 +19,13 @@ import javax.inject.Inject
 class VariantSelectorActivity : BaseActivity(), IVariantSelectorView {
 
     @Inject
+    override
+    lateinit var mProgressDialog: ProgressDialog
+
+    @Inject
     lateinit var mVariantSelectorPresenter: IVariantSelectorPresenter<IVariantSelectorView>
 
+    // Recyclerview adapter for main recycler view containing variant groups and variant choices
     lateinit var mVariantsAdapter: VariantsGroupAdapter
 
     // variant list
@@ -34,10 +40,12 @@ class VariantSelectorActivity : BaseActivity(), IVariantSelectorView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.variant_selector_activity)
-        (application as WandereeApplication).appComponent.variantSelectorComponent(VariantSelectorModule()).inject(this)
+        (application as WandereeApplication).appComponent.variantSelectorComponent(VariantSelectorModule(this)).inject(this)
+        // init recycler view
         recycler_view.layoutManager = LinearLayoutManager(this)
         mVariantsAdapter = VariantsGroupAdapter(this)
         recycler_view.setAdapter(mVariantsAdapter)
+        // attach activity to presenter
         mVariantSelectorPresenter.onAttach(this)
     }
 
@@ -47,20 +55,23 @@ class VariantSelectorActivity : BaseActivity(), IVariantSelectorView {
         resetAdapterData()
     }
 
+    // method that updates adapter with new data
     override fun resetAdapterData() {
         if (mVariantsList != null) {
-//
-//            Timber.d("adapter list" + mVariantsAdapter.variantGroups.toString())
-//            Timber.d("activitylist" + mVariantsList.toString())
             mVariantsAdapter.variantGroups = deepClone(mVariantsList!!)
+
+//            mVariantsAdapter.variantGroups.removeAll { true }
+//            mVariantsAdapter.variantGroups.addAll(mVariantsList!!.map { it.copy() })
         }
     }
 
+    // subscribes to event sent by adapter to recalculate current state of variant data
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateDataMessage(event: UpdateDataMessage) {
         updateListData(event.groupId, event.childId)
     }
 
+    // recalculates current state of variant data
     override fun updateListData(mGroupId: String, mChildId: String) {
         // if mVariantList is not empty or null
         if (mVariantsList != null || !mVariantsList!!.isEmpty()) {
@@ -132,6 +143,7 @@ class VariantSelectorActivity : BaseActivity(), IVariantSelectorView {
         EventBus.getDefault().unregister(this)
     }
 
+    // creates a deep clone of list to avoid issues due to references
     fun deepClone(list: List<VariantGroupsItem>): List<VariantGroupsItem> {
         val out = mutableListOf<VariantGroupsItem>()
         list.forEach {
@@ -146,5 +158,6 @@ class VariantSelectorActivity : BaseActivity(), IVariantSelectorView {
     override fun onDestroy() {
         super.onDestroy()
         mVariantSelectorPresenter.onDetach()
+        mProgressDialog.dismiss()
     }
 }

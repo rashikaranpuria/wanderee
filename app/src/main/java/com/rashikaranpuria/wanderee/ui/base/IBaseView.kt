@@ -9,4 +9,8 @@ interface IBaseView {
     fun msg(msg: String)
     // msg func to show text stored at id msg in android resources
     fun msg(msgId: Int)
+
+    // General progress bar
+    fun showProgressDialog()
+    fun hideProgressDialog()
 }

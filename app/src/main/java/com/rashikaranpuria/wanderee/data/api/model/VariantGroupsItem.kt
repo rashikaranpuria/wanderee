@@ -14,4 +14,24 @@ data class VariantGroupsItem(
 
     @field:SerializedName("name")
     val name: String
-)
+) {
+    override fun hashCode(): Int {
+        var result = groupId.hashCode()
+        result = 31 * result + variations.hashCode()
+        result = 31 * result + name.hashCode()
+        return result
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as VariantGroupsItem
+
+        if (groupId != other.groupId) return false
+        if (variations != other.variations) return false
+        if (name != other.name) return false
+
+        return true
+    }
+}

@@ -14,6 +14,7 @@ class VariantSelectorPresenter<V : IVariantSelectorView> @Inject constructor(pri
     // fetch all data from swiggy api
     override fun onAttach(v: V) {
         super.onAttach(v)
+        view?.showProgressDialog()
         mCompositeDisposable.add(
                 mDataManager.fetchVariantsData()
                         .subscribeOn(Schedulers.io())
@@ -22,8 +23,10 @@ class VariantSelectorPresenter<V : IVariantSelectorView> @Inject constructor(pri
                             onSuccess = {
                                 // send variants list and eclusion mapping to adapter via view
                                 view?.setVariantsDataInAdapter(it.variants?.variantGroups, calcExclusionMapping(it.variants?.excludeList))
+                                view?.hideProgressDialog()
                             },
                             onError = {
+                                view?.hideProgressDialog()
                                 view?.error(it.localizedMessage ?: "Unable to fetch data from server")
                             }
                         )
@@ -47,6 +50,7 @@ class VariantSelectorPresenter<V : IVariantSelectorView> @Inject constructor(pri
         return hm
     }
 
+    // dispose composite disposable when activity detached
     override fun onDetach() {
         super.onDetach()
         mCompositeDisposable.dispose()

@@ -18,14 +18,11 @@ import kotlinx.android.synthetic.main.variation_item.view.*
 import kotlin.properties.Delegates
 import org.greenrobot.eventbus.EventBus
 
-
-
 class VariantsGroupAdapter(val context: Context) : RecyclerView.Adapter<VariantsGroupAdapter.VariantGroupViewHolder>(), AutoUpdatableAdapter {
 
     // diff utils for group VariantsGroupAdapter
     var variantGroups: List<VariantGroupsItem> by Delegates.observable(emptyList()) {
         _, oldList, newList ->
-//        Timber.d("CHanging....")
         autoNotify(oldList, newList) { o, n -> o.groupId == n.groupId }
     }
 
@@ -35,7 +32,6 @@ class VariantsGroupAdapter(val context: Context) : RecyclerView.Adapter<Variants
     override fun getItemCount(): Int = variantGroups.size
 
     override fun onBindViewHolder(holder: VariantGroupViewHolder, position: Int) {
-//        Timber.d("on bind group adapter")
         holder.bind(variantGroups[holder.adapterPosition])
     }
 
@@ -70,7 +66,6 @@ class VariantsGroupAdapter(val context: Context) : RecyclerView.Adapter<Variants
         override fun getItemCount(): Int = childVariations.size
 
         override fun onBindViewHolder(holder: VariantChildViewholder, position: Int) {
-//            Timber.d("on bind child adapter")
             holder.bind(childVariations[holder.adapterPosition])
         }
 
