@@ -16,6 +16,9 @@ import com.rashikaranpuria.wanderee.data.api.model.VariationsItem
 import kotlinx.android.synthetic.main.variant_group_item.view.*
 import kotlinx.android.synthetic.main.variation_item.view.*
 import kotlin.properties.Delegates
+import org.greenrobot.eventbus.EventBus
+
+
 
 class VariantsGroupAdapter(val context: Context) : RecyclerView.Adapter<VariantsGroupAdapter.VariantGroupViewHolder>(), AutoUpdatableAdapter {
 
@@ -113,7 +116,7 @@ class VariantsGroupAdapter(val context: Context) : RecyclerView.Adapter<Variants
 
                 // child click listener prompts activity to update data according to new selection
                 rootView.setOnClickListener {
-                    (context as VariantSelectorActivity).updateListData(groupId, item.id)
+                    EventBus.getDefault().post(UpdateDataMessage(groupId, item.id))
                 }
             }
         }

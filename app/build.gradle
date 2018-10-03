@@ -70,6 +70,9 @@ dependencies {
 
     // Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    //Eventbus for inter process communication
+    implementation 'org.greenrobot:eventbus:3.1.1'
 }
 
 task ktlint(type: JavaExec, group: "verification") {

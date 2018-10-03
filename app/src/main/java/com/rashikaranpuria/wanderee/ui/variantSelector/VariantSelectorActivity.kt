@@ -10,6 +10,9 @@ import com.rashikaranpuria.wanderee.data.api.model.VariationsItem
 import com.rashikaranpuria.wanderee.di.Module.VariantSelectorModule
 import com.rashikaranpuria.wanderee.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.variant_selector_activity.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
 
 class VariantSelectorActivity : BaseActivity(), IVariantSelectorView {
@@ -51,6 +54,11 @@ class VariantSelectorActivity : BaseActivity(), IVariantSelectorView {
 //            Timber.d("activitylist" + mVariantsList.toString())
             mVariantsAdapter.variantGroups = deepClone(mVariantsList!!)
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateDataMessage(event: UpdateDataMessage) {
+        updateListData(event.groupId, event.childId)
     }
 
     override fun updateListData(mGroupId: String, mChildId: String) {
@@ -112,6 +120,16 @@ class VariantSelectorActivity : BaseActivity(), IVariantSelectorView {
                 }
             }
         resetAdapterData()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
     }
 
     fun deepClone(list: List<VariantGroupsItem>): List<VariantGroupsItem> {
